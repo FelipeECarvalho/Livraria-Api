@@ -10,6 +10,7 @@
         public string Slug { get; set; }
         public IList<Evaluation> Evaluations { get; set; }
         public IList<Role> Roles { get; set; }
+        public IList<Sale> Purchases { get; set; }
         public Adress Adress { get; set; }
     }
 }
