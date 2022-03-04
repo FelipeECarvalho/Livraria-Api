@@ -1,8 +1,8 @@
-﻿using Livraria.Models;
+﻿using Livraria.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Livraria.Data.Mappings
+namespace Livraria.Data.Mappings.UsersMap
 {
     public class AdressMap : IEntityTypeConfiguration<Adress>
     {
@@ -62,7 +62,7 @@ namespace Livraria.Data.Mappings
 
             builder.HasOne(x => x.User)
                 .WithOne(x => x.Adress)
-                .HasForeignKey<Adress>(x => x.UserId) ;
+                .HasForeignKey<Adress>(x => x.UserId);
         }
     }
 }

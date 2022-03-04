@@ -1,4 +1,4 @@
-﻿namespace Livraria.Models
+﻿namespace Livraria.Models.Books
 {
     public class Book
     {
@@ -13,7 +13,9 @@
         public string Slug { get; set; }
         public IList<Evaluation> Evaluations { get; set; }
         public IList<Sale> Sales { get; set; }
+        public int AuthorId { get; set; }
         public Author Author { get; set; }
+        public int CategoryId { get; set; }
         public Category Category { get; set; }
     }
 }

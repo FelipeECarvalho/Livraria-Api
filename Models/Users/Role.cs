@@ -1,10 +1,10 @@
-﻿namespace Livraria.Models
+﻿namespace Livraria.Models.Users
 {
-    public class Category
+    public class Role
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Slug { get; set; }
-        public IList<Book> Books { get; set; }
+        public List<User> Users { get; set; }
     }
 }

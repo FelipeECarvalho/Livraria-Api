@@ -1,4 +1,6 @@
-﻿namespace Livraria.Models
+﻿using Livraria.Models.Books;
+
+namespace Livraria.Models.Users
 {
     public class User
     {

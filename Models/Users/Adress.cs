@@ -1,4 +1,4 @@
-﻿namespace Livraria.Models
+﻿namespace Livraria.Models.Users
 {
     public class Adress
     {

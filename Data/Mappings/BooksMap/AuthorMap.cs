@@ -1,8 +1,8 @@
-﻿using Livraria.Models;
+﻿using Livraria.Models.Books;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Livraria.Data.Mappings
+namespace Livraria.Data.Mappings.BooksMap
 {
     public class AuthorMap : IEntityTypeConfiguration<Author>
     {

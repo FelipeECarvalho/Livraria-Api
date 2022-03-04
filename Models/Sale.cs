@@ -1,4 +1,6 @@
-﻿using Livraria.Models.Enums;
+﻿using Livraria.Models.Books;
+using Livraria.Models.Enums;
+using Livraria.Models.Users;
 
 namespace Livraria.Models
 {
@@ -9,6 +11,6 @@ namespace Livraria.Models
         public Status Status { get; set; }
         public decimal Value { get; set; }
         public User User { get; set; }
-        public IList<Book> Books { get; set; }
+        public List<Book> Books { get; set; }
     }
 }

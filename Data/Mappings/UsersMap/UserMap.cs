@@ -1,8 +1,8 @@
-﻿using Livraria.Models;
+﻿using Livraria.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Livraria.Data.Mappings
+namespace Livraria.Data.Mappings.UsersMap
 {
     public class UserMap : IEntityTypeConfiguration<User>
     {

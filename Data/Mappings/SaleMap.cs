@@ -1,4 +1,5 @@
 ﻿using Livraria.Models;
+using Livraria.Models.Books;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
