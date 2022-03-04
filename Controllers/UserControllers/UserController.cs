@@ -1,4 +1,5 @@
 ﻿using Livraria.Data;
+using Livraria.Extensions;
 using Livraria.Models.Users;
 using Livraria.ViewModels;
 using Livraria.ViewModels.Users;
@@ -47,8 +48,8 @@ namespace Livraria.Controllers.UserControllers
         {
             try
             {
-                if (model is null)
-                    return BadRequest(new ResultViewModel<User>("40exU - Usuário não existe"));
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<User>(ModelState.GetErrors()));
 
                 var user = new User
                 {
@@ -79,7 +80,11 @@ namespace Livraria.Controllers.UserControllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<User>(ModelState.GetErrors()));
+
                 var user = await context.Users.FindAsync(id);
+
                 if (user is null)
                     return BadRequest(new ResultViewModel<User>("40exU - Usuário não existe"));
 

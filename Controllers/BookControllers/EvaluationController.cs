@@ -1,4 +1,5 @@
 ﻿using Livraria.Data;
+using Livraria.Extensions;
 using Livraria.Models.Books;
 using Livraria.ViewModels;
 using Livraria.ViewModels.Books;
@@ -47,6 +48,9 @@ namespace Livraria.Controllers.BookControllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<Evaluation>(ModelState.GetErrors()));
+
                 var evaluation = new Evaluation
                 {
                     Rating = model.Rating,
@@ -77,6 +81,9 @@ namespace Livraria.Controllers.BookControllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<Evaluation>(ModelState.GetErrors()));
+
                 var evaluation = await context.Evaluations.FindAsync(id);
 
                 if (evaluation is null)

@@ -1,4 +1,5 @@
 ﻿using Livraria.Data;
+using Livraria.Extensions;
 using Livraria.Models.Users;
 using Livraria.ViewModels;
 using Livraria.ViewModels.Users;
@@ -47,8 +48,8 @@ namespace Livraria.Controllers.RoleControllers
         {
             try
             {
-                if (model is null)
-                    return BadRequest(new ResultViewModel<Role>("40exU - Perfil não existe"));
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<Role>(ModelState.GetErrors()));
 
                 var role = new Role
                 {
@@ -76,6 +77,9 @@ namespace Livraria.Controllers.RoleControllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<Role>(ModelState.GetErrors()));
+
                 var role = await context.Roles.FindAsync(id);
 
                 if (role is null)

@@ -1,4 +1,5 @@
 ﻿using Livraria.Data;
+using Livraria.Extensions;
 using Livraria.Models.Books;
 using Livraria.ViewModels;
 using Livraria.ViewModels.Books;
@@ -48,8 +49,9 @@ namespace Livraria.Controllers.BookControllers
         {
             try
             {
-                if (model is null)
-                    return BadRequest(new ResultViewModel<Author>("40exA - Autor inválido"));
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<Author>(ModelState.GetErrors()));
+
 
                 var author = new Author
                 {
@@ -79,6 +81,9 @@ namespace Livraria.Controllers.BookControllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<Author>(ModelState.GetErrors()));
+
                 var author = await context.Authors.FindAsync(id);
 
                 if (author is null)

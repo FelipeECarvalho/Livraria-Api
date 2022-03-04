@@ -1,4 +1,5 @@
 ﻿using Livraria.Data;
+using Livraria.Extensions;
 using Livraria.Models.Users;
 using Livraria.ViewModels;
 using Livraria.ViewModels.Users;
@@ -47,8 +48,8 @@ namespace Livraria.Controllers.UserControllers
         {
             try
             {
-                if (model is null)
-                    return BadRequest(new ResultViewModel<Adress>("40exA - Endereço inválido"));
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<Adress>(ModelState.GetErrors()));
 
                 var adress = new Adress
                 {
@@ -82,6 +83,9 @@ namespace Livraria.Controllers.UserControllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<Adress>(ModelState.GetErrors()));
+
                 var adress = await context.Adresses.FindAsync(id);
 
                 if (adress is null)

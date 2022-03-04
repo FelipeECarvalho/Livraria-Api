@@ -1,4 +1,5 @@
 ﻿using Livraria.Data;
+using Livraria.Extensions;
 using Livraria.Models.Books;
 using Livraria.ViewModels;
 using Livraria.ViewModels.Books;
@@ -48,6 +49,9 @@ namespace Livraria.Controllers.BookControllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<Book>(ModelState.GetErrors()));
+
                 var book = new Book
                 {
                     AuthorId = model.AuthorId,
@@ -82,6 +86,9 @@ namespace Livraria.Controllers.BookControllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<Book>(ModelState.GetErrors()));
+
                 var book = await context.Books.FindAsync(id);
 
                 if (book is null)

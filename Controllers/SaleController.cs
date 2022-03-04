@@ -1,4 +1,5 @@
 ﻿using Livraria.Data;
+using Livraria.Extensions;
 using Livraria.Models;
 using Livraria.Models.Books;
 using Livraria.ViewModels;
@@ -46,29 +47,30 @@ namespace Livraria.Controllers
         {
             try
             {
-                var books = new List<Book>();
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<Sale>(ModelState.GetErrors()));
+
                 var user = await context.Users.FindAsync(model.UserId);
 
                 if (user is null)
                     return BadRequest(new ResultViewModel<Sale>("40exS - Usuário não existe"));
 
-                foreach (var id in model.BooksId) 
-                {
-                    var book = await context.Books.FindAsync(id);
-                    if (book is null)
-                        return BadRequest(new ResultViewModel<Sale>("40exS - Livro ou livros não existem"));
-                    books.Add(book);
-                }
-
-
                 var sale = new Sale
                 {
                     Date = model.Date,
                     Status = 0,
-                    Value = books.Sum(x => x.Price),
-                    Books = books,
                     User = user
                 };
+
+                foreach (var id in model.BooksId)
+                {
+                    var book = await context.Books.FindAsync(id);
+                    if (book is null)
+                        return BadRequest(new ResultViewModel<Sale>("40exS - Livro ou livros não existem"));
+                    sale.Books.Add(book);
+                }
+
+                sale.Value = sale.Books.Sum(x => x.Price);
 
                 await context.Sales.AddAsync(sale);
                 await context.SaveChangesAsync();
@@ -90,6 +92,9 @@ namespace Livraria.Controllers
         {
             try 
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<Sale>(ModelState.GetErrors()));
+
                 var sale = await context.Sales.FindAsync(id);
 
                 if (sale is null)

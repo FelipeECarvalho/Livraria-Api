@@ -1,4 +1,5 @@
 ﻿using Livraria.Data;
+using Livraria.Extensions;
 using Livraria.Models.Books;
 using Livraria.ViewModels;
 using Livraria.ViewModels.Books;
@@ -47,6 +48,9 @@ namespace Livraria.Controllers.BookControllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<Category>(ModelState.GetErrors()));
+
                 var category = new Category
                 {
                     Name = model.Name,
@@ -73,6 +77,9 @@ namespace Livraria.Controllers.BookControllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<Category>(ModelState.GetErrors()));
+
                 var category = await context.Categories.FindAsync(id);
 
                 if (category is null)
