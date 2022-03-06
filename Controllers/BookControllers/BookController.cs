@@ -6,6 +6,7 @@ using Livraria.ViewModels.Books;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace Livraria.Controllers.BookControllers
 {
@@ -14,7 +15,6 @@ namespace Livraria.Controllers.BookControllers
     public class BookController : ControllerBase
     {
         [HttpGet]
-        [Authorize(Roles = "user,administrator")]
         public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
         {
             try
@@ -30,7 +30,6 @@ namespace Livraria.Controllers.BookControllers
         }
 
         [HttpGet("{id:int}")]
-        [Authorize(Roles = "user,administrator")]
         public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
@@ -147,6 +146,49 @@ namespace Livraria.Controllers.BookControllers
             catch
             {
                 return StatusCode(500, new ResultViewModel<Book>("50exB - Erro ao acessar o servidor"));
+            }
+        }
+    
+        [HttpPost("upload-image/{id:int}")]
+        [Authorize(Roles = "administrator")]
+        public async Task<IActionResult> UploadImage([FromRoute] int id, [FromBody] UploadImageViewModel model, [FromServices] LivrariaDataContext context) 
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
+
+            var book = await context.Books.FindAsync(id);
+
+            if (book is null)
+                return BadRequest(new ResultViewModel<string>("40exB - Livro não existe"));
+
+            var fileName = Guid.NewGuid().ToString() + ".jpg";
+
+            var data = new Regex(@"^data:image\/[a-z]+;base64,")
+                .Replace(model.Base64Image, "");
+
+            var bytes = Convert.FromBase64String(data);
+
+            try 
+            {
+                await System.IO.File.WriteAllBytesAsync($"wwwroot/images/books/{fileName}", bytes);
+            }
+            catch (IOException) 
+            {
+                return BadRequest(new ResultViewModel<string>("40exB - Erro ao inserir a imagem"));
+            }
+
+            book.Image = $"https://localhost:0000/images/books/{fileName}";
+
+            try
+            {
+                context.Books.Update(book);
+                await context.SaveChangesAsync();
+
+                return Ok(new ResultViewModel<string>("Imagem inserida com sucesso!", null));
+            }
+            catch (IOException)
+            {
+                return BadRequest(new ResultViewModel<string>("40exB - Erro ao inserir a imagem"));
             }
         }
     }

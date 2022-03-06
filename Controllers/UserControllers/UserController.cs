@@ -11,10 +11,10 @@ namespace Livraria.Controllers.UserControllers
 {
     [ApiController]
     [Route("v1/users")]
+    [Authorize(Roles = "user,administrator")]
     public class UserController : ControllerBase
     {
         [HttpGet]
-        [Authorize(Roles = "user,administrator")]
         public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
         {
             try
@@ -28,8 +28,7 @@ namespace Livraria.Controllers.UserControllers
             }
         }
 
-        [HttpGet("{id:int}")]
-        [Authorize(Roles = "user,administrator")]
+        [HttpGet("{id:int}")]        
         public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
@@ -48,7 +47,6 @@ namespace Livraria.Controllers.UserControllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "administrator")]
         public async Task<IActionResult> Post([FromBody] UserViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
@@ -88,7 +86,6 @@ namespace Livraria.Controllers.UserControllers
         }
 
         [HttpPut("{id:int}")]
-        [Authorize(Roles = "administrator")]
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] UserViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
@@ -122,7 +119,6 @@ namespace Livraria.Controllers.UserControllers
         }
 
         [HttpDelete("{id:int}")]
-        [Authorize(Roles = "administrator")]
         public async Task<IActionResult> Delete([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try

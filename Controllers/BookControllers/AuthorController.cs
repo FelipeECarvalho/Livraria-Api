@@ -6,6 +6,7 @@ using Livraria.ViewModels.Books;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace Livraria.Controllers.BookControllers
 {
@@ -14,7 +15,6 @@ namespace Livraria.Controllers.BookControllers
     public class AuthorController : ControllerBase
     {
         [HttpGet]
-        [Authorize(Roles = "user,administrator")]
         public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
         {
             try
@@ -30,7 +30,6 @@ namespace Livraria.Controllers.BookControllers
         }
 
         [HttpGet("{id:int}")]
-        [Authorize(Roles = "user,administrator")]
         public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
@@ -138,6 +137,51 @@ namespace Livraria.Controllers.BookControllers
             catch
             {
                 return StatusCode(500, new ResultViewModel<Author>("50exA - Erro ao acessar servidor"));
+            }
+        }
+    
+    
+        [HttpPost("upload-image/{id:int}")]
+        [Authorize(Roles = "administrator")]
+        public async Task<IActionResult> UploadImage([FromRoute]int id, [FromBody]UploadImageViewModel model, [FromServices]LivrariaDataContext context)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
+
+            var author = await context.Authors.FindAsync(id);
+
+            if (author is null)
+                return BadRequest(new ResultViewModel<string>("40exAu - Autor não encontrado"));
+
+
+            var fileName = Guid.NewGuid().ToString() + ".jpg";
+
+            var data = new Regex(@"^data:image\/[a-z]+;base64,")
+                .Replace(model.Base64Image, "");
+
+            var bytes = Convert.FromBase64String(data);
+
+            try 
+            {
+                await System.IO.File.WriteAllBytesAsync($"wwwroot/images/authors/{fileName}", bytes);
+            }
+            catch (IOException) 
+            {
+                return StatusCode(500, new ResultViewModel<string>("50exAu - Erro ao inserir imagem", new()));
+            }
+
+            author.Photo = $"https://localhost:0000/images/authors/{fileName}";
+
+            try 
+            {
+                context.Authors.Update(author);
+                await context.SaveChangesAsync();
+
+                return Ok(new ResultViewModel<string>("Imagem inserida com sucesso!", null));
+            }
+            catch(DbUpdateException) 
+            {
+                return StatusCode(500, new ResultViewModel<string>("50exAu - Erro ao atulizar o autor"));
             }
         }
     }

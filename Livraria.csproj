@@ -19,4 +19,9 @@
     <PackageReference Include="SecureIdentity" Version="1.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\authors\" />
+    <Folder Include="wwwroot\images\books\" />
+  </ItemGroup>
+
 </Project>

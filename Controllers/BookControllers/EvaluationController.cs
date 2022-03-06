@@ -15,6 +15,7 @@ namespace Livraria.Controllers.BookControllers
     public class EvaluationController : ControllerBase
     {
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
         {
             try
@@ -29,6 +30,7 @@ namespace Livraria.Controllers.BookControllers
         }
 
         [HttpGet("{id:int}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try

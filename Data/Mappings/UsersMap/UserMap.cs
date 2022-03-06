@@ -28,6 +28,11 @@ namespace Livraria.Data.Mappings.UsersMap
                 .HasColumnType("NVARCHAR")
                 .HasMaxLength(160);
 
+            builder.Property(x => x.Image)
+                .IsRequired(false)
+                .HasColumnName("Image")
+                .HasColumnType("TEXT");
+
             builder.Property(x => x.Phone)
                 .IsRequired(false)
                 .HasColumnName("Phone")

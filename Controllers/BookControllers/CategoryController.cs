@@ -14,7 +14,6 @@ namespace Livraria.Controllers.BookControllers
     public class CategoryController : ControllerBase
     {
         [HttpGet]
-        [Authorize(Roles = "user,administrator")]
         public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
         {
             try
@@ -29,7 +28,6 @@ namespace Livraria.Controllers.BookControllers
         }
 
         [HttpGet("{id:int}")]
-        [Authorize(Roles = "user,administrator")]
         public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
