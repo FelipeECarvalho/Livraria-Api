@@ -10,9 +10,9 @@ namespace Livraria.Models.Users
         public string Phone { get; set; }
         public string PasswordHash { get; set; }
         public string Slug { get; set; }
-        public IList<Evaluation> Evaluations { get; set; }
-        public IList<Role> Roles { get; set; }
-        public IList<Sale> Purchases { get; set; }
+        public List<Evaluation> Evaluations { get; set; }
+        public List<Role> Roles { get; set; } = new();
+        public List<Sale> Purchases { get; set; }
         public Adress Adress { get; set; }
     }
 }

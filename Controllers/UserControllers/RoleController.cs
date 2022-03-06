@@ -3,15 +3,18 @@ using Livraria.Extensions;
 using Livraria.Models.Users;
 using Livraria.ViewModels;
 using Livraria.ViewModels.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Livraria.Controllers.RoleControllers
 {
     [ApiController]
+    [Route("v1/roles")]
     public class RoleController : ControllerBase
     {
-        [HttpGet("v1/roles")]
+        [HttpGet]
+        [Authorize(Roles = "user,administrator")]
         public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
         {
             try
@@ -25,7 +28,8 @@ namespace Livraria.Controllers.RoleControllers
             }
         }
 
-        [HttpGet("v1/roles/{id:int}")]
+        [HttpGet("{id:int}")]
+        [Authorize(Roles = "user,administrator")]
         public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
@@ -43,7 +47,8 @@ namespace Livraria.Controllers.RoleControllers
             }
         }
 
-        [HttpPost("v1/roles")]
+        [HttpPost]
+        [Authorize(Roles = "administrator")]
         public async Task<IActionResult> Post([FromBody] RoleViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
@@ -72,7 +77,8 @@ namespace Livraria.Controllers.RoleControllers
             }
         }
 
-        [HttpPut("v1/roles/{id:int}")]
+        [HttpPut("{id:int}")]
+        [Authorize(Roles = "administrator")]
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] RoleViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
@@ -103,7 +109,8 @@ namespace Livraria.Controllers.RoleControllers
             }
         }
 
-        [HttpDelete("v1/roles/{id:int}")]
+        [HttpDelete("{id:int}")]
+        [Authorize(Roles = "administrator")]
         public async Task<IActionResult> Delete([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try

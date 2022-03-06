@@ -3,15 +3,18 @@ using Livraria.Extensions;
 using Livraria.Models.Users;
 using Livraria.ViewModels;
 using Livraria.ViewModels.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Livraria.Controllers.UserControllers
 {
     [ApiController]
+    [Route("v1/adresses")]
     public class AdressController : ControllerBase
     {
-        [HttpGet("v1/adresses")]
+        [HttpGet]
+        [Authorize(Roles = "user,administrator")]
         public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
         {
             try
@@ -25,7 +28,8 @@ namespace Livraria.Controllers.UserControllers
             }
         }
 
-        [HttpGet("v1/adresses/{id:int}")]
+        [HttpGet("{id:int}")]
+        [Authorize(Roles = "user,administrator")]
         public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
@@ -43,7 +47,8 @@ namespace Livraria.Controllers.UserControllers
             }
         }
 
-        [HttpPost("v1/adresses")]
+        [HttpPost]
+        [Authorize(Roles = "administrator")]
         public async Task<IActionResult> Post([FromBody] CreateAdressViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
@@ -78,7 +83,8 @@ namespace Livraria.Controllers.UserControllers
             }
         }
 
-        [HttpPut("v1/adresses/{id:int}")]
+        [HttpPut("{id:int}")]
+        [Authorize(Roles = "administrator")]
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] UpdateAdressViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
@@ -113,7 +119,8 @@ namespace Livraria.Controllers.UserControllers
             }
         }
 
-        [HttpDelete("v1/adresses/{id:int}")]
+        [HttpDelete("{id:int}")]
+        [Authorize(Roles = "administrator")]
         public async Task<IActionResult> Delete([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try

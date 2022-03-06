@@ -60,7 +60,7 @@ namespace Livraria.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "VARCHAR(80)", maxLength: 80, nullable: false),
                     Email = table.Column<string>(type: "NVARCHAR(160)", maxLength: 160, nullable: false),
-                    Phone = table.Column<string>(type: "VARCHAR(30)", maxLength: 30, nullable: false),
+                    Phone = table.Column<string>(type: "VARCHAR(30)", maxLength: 30, nullable: true),
                     PasswordHash = table.Column<string>(type: "NVARCHAR(255)", maxLength: 255, nullable: false),
                     Slug = table.Column<string>(type: "VARCHAR(80)", maxLength: 80, nullable: false)
                 },

@@ -3,15 +3,18 @@ using Livraria.Extensions;
 using Livraria.Models.Books;
 using Livraria.ViewModels;
 using Livraria.ViewModels.Books;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Livraria.Controllers.BookControllers
 {
     [ApiController]
+    [Route("v1/authors")]
     public class AuthorController : ControllerBase
     {
-        [HttpGet("v1/authors")]
+        [HttpGet]
+        [Authorize(Roles = "user,administrator")]
         public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
         {
             try
@@ -26,7 +29,8 @@ namespace Livraria.Controllers.BookControllers
             }
         }
 
-        [HttpGet("v1/authors/{id:int}")]
+        [HttpGet("{id:int}")]
+        [Authorize(Roles = "user,administrator")]
         public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
@@ -44,7 +48,8 @@ namespace Livraria.Controllers.BookControllers
             }
         }
 
-        [HttpPost("v1/authors/")]
+        [HttpPost]
+        [Authorize(Roles = "administrator")]
         public async Task<IActionResult> Post([FromBody] AuthorViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
@@ -76,7 +81,8 @@ namespace Livraria.Controllers.BookControllers
             }
         }
 
-        [HttpPut("v1/authors/{id:int}")]
+        [HttpPut("{id:int}")]
+        [Authorize(Roles = "administrator")]
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] AuthorViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
@@ -109,8 +115,8 @@ namespace Livraria.Controllers.BookControllers
             }
         }
 
-
-        [HttpDelete("v1/authors/{id:int}")]
+        [HttpDelete("{id:int}")]
+        [Authorize(Roles = "administrator")]
         public async Task<IActionResult> Delete([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try

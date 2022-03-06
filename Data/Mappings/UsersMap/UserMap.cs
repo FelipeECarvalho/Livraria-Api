@@ -29,7 +29,7 @@ namespace Livraria.Data.Mappings.UsersMap
                 .HasMaxLength(160);
 
             builder.Property(x => x.Phone)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("Phone")
                 .HasColumnType("VARCHAR")
                 .HasMaxLength(30);

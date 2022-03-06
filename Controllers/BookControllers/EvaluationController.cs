@@ -3,15 +3,18 @@ using Livraria.Extensions;
 using Livraria.Models.Books;
 using Livraria.ViewModels;
 using Livraria.ViewModels.Books;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Livraria.Controllers.BookControllers
 {
     [ApiController]
+    [Authorize(Roles = "user")]
+    [Route("v1/evaluations")]
     public class EvaluationController : ControllerBase
     {
-        [HttpGet("v1/evaluations")]
+        [HttpGet]
         public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
         {
             try
@@ -25,7 +28,7 @@ namespace Livraria.Controllers.BookControllers
             }
         }
 
-        [HttpGet("v1/evaluations/{id:int}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
@@ -43,7 +46,7 @@ namespace Livraria.Controllers.BookControllers
             }
         }
 
-        [HttpPost("v1/evaluations")]
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody] EvaluationViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
@@ -76,7 +79,7 @@ namespace Livraria.Controllers.BookControllers
             }
         }
 
-        [HttpPut("v1/evaluations/{id:int}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] EvaluationViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
@@ -111,7 +114,7 @@ namespace Livraria.Controllers.BookControllers
             }
         }
 
-        [HttpDelete("v1/evaluations/{id:int}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try

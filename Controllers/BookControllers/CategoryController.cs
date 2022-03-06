@@ -3,15 +3,18 @@ using Livraria.Extensions;
 using Livraria.Models.Books;
 using Livraria.ViewModels;
 using Livraria.ViewModels.Books;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Livraria.Controllers.BookControllers
 {
     [ApiController]
+    [Route("v1/categories")]
     public class CategoryController : ControllerBase
     {
-        [HttpGet("v1/categories")]
+        [HttpGet]
+        [Authorize(Roles = "user,administrator")]
         public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
         {
             try
@@ -25,7 +28,8 @@ namespace Livraria.Controllers.BookControllers
             }
         }
 
-        [HttpGet("v1/categories/{id:int}")]
+        [HttpGet("{id:int}")]
+        [Authorize(Roles = "user,administrator")]
         public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
@@ -43,7 +47,8 @@ namespace Livraria.Controllers.BookControllers
             }
         }
 
-        [HttpPost("v1/categories")]
+        [HttpPost]
+        [Authorize(Roles = "administrator")]
         public async Task<IActionResult> Post([FromBody] CategoryViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
@@ -72,7 +77,8 @@ namespace Livraria.Controllers.BookControllers
             }
         }
 
-        [HttpPut("v1/categories/{id:int}")]
+        [HttpPut("{id:int}")]
+        [Authorize(Roles = "administrator")]
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] CategoryViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
@@ -104,7 +110,8 @@ namespace Livraria.Controllers.BookControllers
             }
         }
 
-        [HttpDelete("v1/categories/{id:int}")]
+        [HttpDelete("{id:int}")]
+        [Authorize(Roles = "administrator")]
         public async Task<IActionResult> Delete([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
