@@ -139,11 +139,11 @@ namespace Livraria.Controllers.BookControllers
                 return StatusCode(500, new ResultViewModel<Author>("50exA - Erro ao acessar servidor"));
             }
         }
-    
-    
+
+
         [HttpPost("upload-image/{id:int}")]
         [Authorize(Roles = "administrator")]
-        public async Task<IActionResult> UploadImage([FromRoute]int id, [FromBody]UploadImageViewModel model, [FromServices]LivrariaDataContext context)
+        public async Task<IActionResult> UploadImage([FromRoute] int id, [FromBody] UploadImageViewModel model, [FromServices] LivrariaDataContext context)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
@@ -161,25 +161,25 @@ namespace Livraria.Controllers.BookControllers
 
             var bytes = Convert.FromBase64String(data);
 
-            try 
+            try
             {
                 await System.IO.File.WriteAllBytesAsync($"wwwroot/images/authors/{fileName}", bytes);
             }
-            catch (IOException) 
+            catch (IOException)
             {
                 return StatusCode(500, new ResultViewModel<string>("50exAu - Erro ao inserir imagem", new()));
             }
 
             author.Photo = $"https://localhost:0000/images/authors/{fileName}";
 
-            try 
+            try
             {
                 context.Authors.Update(author);
                 await context.SaveChangesAsync();
 
                 return Ok(new ResultViewModel<string>("Imagem inserida com sucesso!", null));
             }
-            catch(DbUpdateException) 
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<string>("50exAu - Erro ao atulizar o autor"));
             }

@@ -28,7 +28,7 @@ namespace Livraria.Controllers.UserControllers
             }
         }
 
-        [HttpGet("{id:int}")]        
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try

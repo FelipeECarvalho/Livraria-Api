@@ -9,7 +9,7 @@ namespace Livraria.Services
 {
     public class TokenService
     {
-        public string GenerateToken(User user) 
+        public string GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -17,7 +17,7 @@ namespace Livraria.Services
 
             var claims = user.GetClaims();
 
-            var tokenDescriptor = new SecurityTokenDescriptor 
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddHours(8),

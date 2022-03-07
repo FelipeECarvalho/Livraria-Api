@@ -1,5 +1,4 @@
-﻿using Livraria.Models.Books;
-using Livraria.Models.Enums;
+﻿using Livraria.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace Livraria.ViewModels

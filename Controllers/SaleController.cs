@@ -1,36 +1,35 @@
 ﻿using Livraria.Data;
 using Livraria.Extensions;
 using Livraria.Models;
-using Livraria.Models.Books;
 using Livraria.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Livraria.Controllers
-{   
+{
     [ApiController]
     [Route("v1/sales")]
     [Authorize(Roles = "user,administrator")]
     public class SaleController : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> Get([FromServices]LivrariaDataContext context) 
+        public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
         {
-            try 
+            try
             {
                 var sales = await context.Sales.ToListAsync();
 
                 return Ok(new ResultViewModel<List<Sale>>(sales));
             }
-            catch 
+            catch
             {
                 return StatusCode(500, new ResultViewModel<Sale>("50exS - Erro ao acessar o servidor"));
             }
         }
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> Get([FromRoute]int id, [FromServices] LivrariaDataContext context) 
+        public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -48,7 +47,7 @@ namespace Livraria.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreateSaleViewModel model, [FromServices] LivrariaDataContext context) 
+        public async Task<IActionResult> Post([FromBody] CreateSaleViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -93,9 +92,9 @@ namespace Livraria.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Put([FromRoute]int id, [FromBody] UpdateSaleViewModel model, [FromServices] LivrariaDataContext context) 
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] UpdateSaleViewModel model, [FromServices] LivrariaDataContext context)
         {
-            try 
+            try
             {
                 if (!ModelState.IsValid)
                     return BadRequest(new ResultViewModel<Sale>(ModelState.GetErrors()));
@@ -109,8 +108,8 @@ namespace Livraria.Controllers
 
                 item.State = EntityState.Modified;
 
-                item.Collection(x => x.Books).Load();  
-                
+                item.Collection(x => x.Books).Load();
+
                 sale.Books.Clear();
 
 
@@ -138,13 +137,13 @@ namespace Livraria.Controllers
             catch
             {
                 return StatusCode(500, new ResultViewModel<Sale>("50exS - Erro ao acessar o servidor"));
-            }  
+            }
         }
-    
+
         [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete([FromRoute]int id, [FromServices] LivrariaDataContext context) 
+        public async Task<ActionResult> Delete([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
-            try 
+            try
             {
                 var sale = await context.Sales.FindAsync(id);
 
@@ -164,7 +163,7 @@ namespace Livraria.Controllers
             catch
             {
                 return StatusCode(500, new ResultViewModel<Sale>("50exS - Erro ao acessar o servidor"));
-            }  
+            }
         }
     }
 }

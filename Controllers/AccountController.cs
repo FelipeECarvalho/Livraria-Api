@@ -1,13 +1,13 @@
 ﻿using Livraria.Data;
 using Livraria.Extensions;
 using Livraria.Models.Users;
+using Livraria.Services;
 using Livraria.ViewModels;
 using Livraria.ViewModels.Accounts;
-using Microsoft.AspNetCore.Mvc;
-using SecureIdentity.Password;
-using Microsoft.EntityFrameworkCore;
-using Livraria.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SecureIdentity.Password;
 using System.Text.RegularExpressions;
 
 namespace Livraria.Controllers
@@ -19,7 +19,7 @@ namespace Livraria.Controllers
     {
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Post([FromBody] RegisterViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> Post([FromBody] RegisterViewModel model,[FromServices]EmailService emailService, [FromServices] LivrariaDataContext context)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ResultViewModel<dynamic>(ModelState.GetErrors()));
@@ -39,6 +39,7 @@ namespace Livraria.Controllers
 
             var password = PasswordGenerator.Generate(25);
             user.PasswordHash = PasswordHasher.Hash(password);
+
             try
             {
                 await context.Users.AddAsync(user);
@@ -47,7 +48,7 @@ namespace Livraria.Controllers
                 return Ok(new ResultViewModel<dynamic>(new {user.Email, password}));
 
             }
-            catch (DbUpdateException) 
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<User>("Email já cadastrado"));
             }
@@ -89,7 +90,7 @@ namespace Livraria.Controllers
 
         [Authorize]
         [HttpPost("upload-image")]
-        public async Task<IActionResult> UploadImage([FromBody] UploadImageViewModel model, [FromServices] LivrariaDataContext context) 
+        public async Task<IActionResult> UploadImage([FromBody] UploadImageViewModel model, [FromServices] LivrariaDataContext context)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
@@ -101,11 +102,11 @@ namespace Livraria.Controllers
 
             var imageBytes = Convert.FromBase64String(data);
 
-            try 
+            try
             {
                 await System.IO.File.WriteAllBytesAsync($"wwwroot/images/users/{fileName}", imageBytes);
             }
-            catch (IOException) 
+            catch (IOException)
             {
                 return StatusCode(500, new ResultViewModel<string>("50exAc - Erro ao inserir imagem"));
             }
@@ -118,14 +119,14 @@ namespace Livraria.Controllers
 
             user.Image = $"https://localhost:0000/images/users/{fileName}";
 
-            try 
+            try
             {
                 context.Users.Update(user);
                 await context.SaveChangesAsync();
 
                 return Ok(new ResultViewModel<string>("Imagem inserida com sucesso!", null));
             }
-            catch (DbUpdateException) 
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<User>("50exAc - Erro ao inserir imagem"));
             }

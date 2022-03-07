@@ -5,9 +5,9 @@ namespace Livraria.Extensions
 {
     public static class RoleClaimsExtension
     {
-        public static IEnumerable<Claim> GetClaims(this User user) 
+        public static IEnumerable<Claim> GetClaims(this User user)
         {
-            var result = new List<Claim> 
+            var result = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Email)
             };

@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 namespace Livraria.Controllers.BookControllers
 {
     [ApiController]
-    [Route("v1/books")]    
+    [Route("v1/books")]
     public class BookController : ControllerBase
     {
         [HttpGet]
@@ -148,10 +148,10 @@ namespace Livraria.Controllers.BookControllers
                 return StatusCode(500, new ResultViewModel<Book>("50exB - Erro ao acessar o servidor"));
             }
         }
-    
+
         [HttpPost("upload-image/{id:int}")]
         [Authorize(Roles = "administrator")]
-        public async Task<IActionResult> UploadImage([FromRoute] int id, [FromBody] UploadImageViewModel model, [FromServices] LivrariaDataContext context) 
+        public async Task<IActionResult> UploadImage([FromRoute] int id, [FromBody] UploadImageViewModel model, [FromServices] LivrariaDataContext context)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
@@ -168,11 +168,11 @@ namespace Livraria.Controllers.BookControllers
 
             var bytes = Convert.FromBase64String(data);
 
-            try 
+            try
             {
                 await System.IO.File.WriteAllBytesAsync($"wwwroot/images/books/{fileName}", bytes);
             }
-            catch (IOException) 
+            catch (IOException)
             {
                 return BadRequest(new ResultViewModel<string>("40exB - Erro ao inserir a imagem"));
             }
