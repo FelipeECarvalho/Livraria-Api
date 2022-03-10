@@ -3,9 +3,11 @@ using Livraria.Data;
 using Livraria.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IO.Compression;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,21 +15,32 @@ LoadConfiguration(builder);
 
 ConfigureAuthentication(builder);
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 ConfigureMvc(builder);
 
 LoadServices(builder);
 
 var app = builder.Build();
 
-app.MapControllers();
+app.UseHttpsRedirection();
 
 app.UseAuthentication();
 
-app.UseResponseCompression();
-
 app.UseAuthorization();
 
+app.MapControllers();
+
+app.UseResponseCompression();
+
 app.UseStaticFiles();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.Run();
 
@@ -61,29 +74,35 @@ void ConfigureMvc(WebApplicationBuilder builder)
     .ConfigureApiBehaviorOptions(options =>
     {
         options.SuppressModelStateInvalidFilter = true;
+    })
+    .AddJsonOptions(x =>
+    {
+        x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
     });
 
-    builder.Services.AddControllersWithViews()
-        .AddNewtonsoftJson(options => options
-            .SerializerSettings
-            .ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+    builder.Services
+        .AddControllersWithViews()
+        .AddNewtonsoftJson(x =>
+        x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 }
 
 void LoadConfiguration(WebApplicationBuilder builder)
 {
-    Configuration.ConnectionString = builder.Configuration.GetValue<string>("ConnectionString");
     Configuration.JwtKey = builder.Configuration.GetValue<string>("JwtKey");
 
     var smtp = new Configuration.SmtpConfiguration();
-
     builder.Configuration.GetSection("Smtp").Bind(smtp);
-
     Configuration.Smtp = smtp;
 }
 
 void LoadServices(WebApplicationBuilder builder)
 {
-    builder.Services.AddDbContext<LivrariaDataContext>();
+    var configurationString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+    builder.Services.AddDbContext<LivrariaDataContext>(options =>
+        options.UseSqlServer(configurationString));
+
     builder.Services.AddTransient<TokenService>();
     builder.Services.AddTransient<EmailService>();
     builder.Services.AddMemoryCache();
@@ -93,7 +112,7 @@ void LoadServices(WebApplicationBuilder builder)
         x.Providers.Add<GzipCompressionProvider>();
     });
 
-    builder.Services.Configure<GzipCompressionProviderOptions>(options => 
+    builder.Services.Configure<GzipCompressionProviderOptions>(options =>
     {
         options.Level = CompressionLevel.Optimal;
     });

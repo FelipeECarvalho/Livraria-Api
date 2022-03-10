@@ -15,14 +15,14 @@ namespace Livraria.Controllers.BookControllers
     public class CategoryController : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> Get([FromServices] LivrariaDataContext context, [FromServices] IMemoryCache cache)
+        public async Task<IActionResult> GetAllAsync([FromServices] LivrariaDataContext context, [FromServices] IMemoryCache cache)
         {
             try
             {
                 var categories = await cache.GetOrCreateAsync("CategoryCache", entry =>
                 {
                     entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
-                    return GetCategories(context);
+                    return GetCategoriesAsync(context);
                 });
                 return Ok(new ResultViewModel<List<Category>>(categories));
             }
@@ -32,11 +32,11 @@ namespace Livraria.Controllers.BookControllers
             }
         }
 
-        private async Task<List<Category>> GetCategories(LivrariaDataContext context) 
+        private async Task<List<Category>> GetCategoriesAsync(LivrariaDataContext context)
             => await context.Categories.ToListAsync();
-            
+
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> GetByIdAsync([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace Livraria.Controllers.BookControllers
 
         [HttpPost]
         [Authorize(Roles = "administrator")]
-        public async Task<IActionResult> Post([FromBody] CategoryViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> PostAsync([FromBody] CategoryViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace Livraria.Controllers.BookControllers
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = "administrator")]
-        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] CategoryViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> PutAsync([FromRoute] int id, [FromBody] CategoryViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -118,7 +118,7 @@ namespace Livraria.Controllers.BookControllers
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "administrator")]
-        public async Task<IActionResult> Delete([FromRoute] int id, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> DeleteAsync([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
             {

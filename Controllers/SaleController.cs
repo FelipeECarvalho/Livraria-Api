@@ -2,6 +2,7 @@
 using Livraria.Extensions;
 using Livraria.Models;
 using Livraria.ViewModels;
+using Livraria.ViewModels.Sales;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,7 @@ namespace Livraria.Controllers
     public class SaleController : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> GetAllAsync([FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -29,7 +30,7 @@ namespace Livraria.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> GetByIdAsync([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -47,7 +48,7 @@ namespace Livraria.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreateSaleViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> PostAsync([FromBody] CreateSaleViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -92,7 +93,7 @@ namespace Livraria.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] UpdateSaleViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> PutAsync([FromRoute] int id, [FromBody] UpdateSaleViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -141,7 +142,7 @@ namespace Livraria.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete([FromRoute] int id, [FromServices] LivrariaDataContext context)
+        public async Task<ActionResult> DeleteAsync([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
             {

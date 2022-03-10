@@ -14,6 +14,6 @@ namespace Livraria.Models.Users
         public List<Evaluation> Evaluations { get; set; }
         public List<Role> Roles { get; set; } = new();
         public List<Sale> Purchases { get; set; }
-        public Adress Adress { get; set; }
+        public Address Address { get; set; }
     }
 }

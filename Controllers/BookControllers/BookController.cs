@@ -15,11 +15,43 @@ namespace Livraria.Controllers.BookControllers
     public class BookController : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> GetAllAsync([FromServices] LivrariaDataContext context, [FromQuery] int page = 0, [FromQuery] int pageSize = 25)
         {
             try
             {
-                var books = await context.Books.ToListAsync();
+                var books = await context
+                    .Books
+                    .AsNoTracking()
+                    .Include(x => x.Author)
+                    .Include(x => x.Category)
+                    .OrderByDescending(x => x.CreatedDate)
+                    .Skip(page * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                return Ok(new ResultViewModel<List<Book>>(books));
+            }
+            catch
+            {
+                return StatusCode(500, new ResultViewModel<Book>("50exB - Erro ao acessar o servidor"));
+            }
+        }
+
+        [HttpGet("category/{category}")]
+        public async Task<IActionResult> GetByCategoryAsync([FromRoute] string category, [FromServices] LivrariaDataContext context, [FromQuery] int page, [FromQuery] int pageSize)
+        {
+            try
+            {
+                var books = await context
+                    .Books
+                    .AsNoTracking()
+                    .Include(x => x.Author)
+                    .Include(x => x.Category)
+                    .Where(x => x.Category.Slug == category)
+                    .OrderByDescending(x => x.CreatedDate)
+                    .Skip(page * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
 
                 return Ok(new ResultViewModel<List<Book>>(books));
             }
@@ -30,7 +62,7 @@ namespace Livraria.Controllers.BookControllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> GetByIdAsync([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -49,7 +81,7 @@ namespace Livraria.Controllers.BookControllers
 
         [HttpPost]
         [Authorize(Roles = "administrator")]
-        public async Task<IActionResult> Post([FromBody] CreateBookViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> PostAsync([FromBody] CreateBookViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -87,7 +119,7 @@ namespace Livraria.Controllers.BookControllers
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = "administrator")]
-        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] UpdateBookViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> PutAsync([FromRoute] int id, [FromBody] UpdateBookViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -124,7 +156,7 @@ namespace Livraria.Controllers.BookControllers
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "administrator")]
-        public async Task<IActionResult> Delete([FromRoute] int id, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> DeleteAsync([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -151,7 +183,7 @@ namespace Livraria.Controllers.BookControllers
 
         [HttpPost("upload-image/{id:int}")]
         [Authorize(Roles = "administrator")]
-        public async Task<IActionResult> UploadImage([FromRoute] int id, [FromBody] UploadImageViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> UploadImageAsync([FromRoute] int id, [FromBody] UploadImageViewModel model, [FromServices] LivrariaDataContext context)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));

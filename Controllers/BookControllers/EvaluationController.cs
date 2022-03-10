@@ -16,11 +16,16 @@ namespace Livraria.Controllers.BookControllers
     {
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> GetAllAsync([FromServices] LivrariaDataContext context, [FromQuery] int page = 0, [FromQuery] int pageSize = 25)
         {
             try
             {
-                var evaluations = await context.Evaluations.ToListAsync();
+                var evaluations = await context
+                    .Evaluations
+                    .Skip(page * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
                 return Ok(new ResultViewModel<List<Evaluation>>(evaluations));
             }
             catch
@@ -31,7 +36,7 @@ namespace Livraria.Controllers.BookControllers
 
         [HttpGet("{id:int}")]
         [AllowAnonymous]
-        public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> GetByIdAsync([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -49,7 +54,7 @@ namespace Livraria.Controllers.BookControllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] EvaluationViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> PostAsync([FromBody] EvaluationViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -82,7 +87,7 @@ namespace Livraria.Controllers.BookControllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] EvaluationViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> PutAsync([FromRoute] int id, [FromBody] EvaluationViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -117,7 +122,7 @@ namespace Livraria.Controllers.BookControllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete([FromRoute] int id, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> DeleteAsync([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
             {

@@ -10,7 +10,9 @@ namespace Livraria.Data
 {
     public class LivrariaDataContext : DbContext
     {
-        public DbSet<Adress> Adresses { get; set; }
+        public LivrariaDataContext(DbContextOptions<LivrariaDataContext> options) : base(options) { }
+
+        public DbSet<Address> Addresses { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -19,12 +21,9 @@ namespace Livraria.Data
         public DbSet<Sale> Sales { get; set; }
         public DbSet<User> Users { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseSqlServer(Configuration.ConnectionString);
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new AdressMap());
+            modelBuilder.ApplyConfiguration(new AddressMap());
             modelBuilder.ApplyConfiguration(new AuthorMap());
             modelBuilder.ApplyConfiguration(new BookMap());
             modelBuilder.ApplyConfiguration(new CategoryMap());

@@ -15,7 +15,7 @@ namespace Livraria.Controllers.RoleControllers
     {
         [HttpGet]
         [Authorize(Roles = "user,administrator")]
-        public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> GetAllAsync([FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace Livraria.Controllers.RoleControllers
 
         [HttpGet("{id:int}")]
         [Authorize(Roles = "user,administrator")]
-        public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> GetByIdAsync([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace Livraria.Controllers.RoleControllers
 
         [HttpPost]
         [Authorize(Roles = "administrator")]
-        public async Task<IActionResult> Post([FromBody] RoleViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> PostAsync([FromBody] RoleViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -79,7 +79,7 @@ namespace Livraria.Controllers.RoleControllers
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = "administrator")]
-        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] RoleViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> PutAsync([FromRoute] int id, [FromBody] RoleViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -111,7 +111,7 @@ namespace Livraria.Controllers.RoleControllers
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "administrator")]
-        public async Task<IActionResult> Delete([FromRoute] int id, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> DeleteAsync([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
             {

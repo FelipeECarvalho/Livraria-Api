@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Livraria.Data.Mappings.UsersMap
 {
-    public class AdressMap : IEntityTypeConfiguration<Adress>
+    public class AddressMap : IEntityTypeConfiguration<Address>
     {
-        public void Configure(EntityTypeBuilder<Adress> builder)
+        public void Configure(EntityTypeBuilder<Address> builder)
         {
-            builder.ToTable("Adresses");
+            builder.ToTable("Addresses");
 
             builder.HasKey(x => x.Id);
 
@@ -57,12 +57,12 @@ namespace Livraria.Data.Mappings.UsersMap
                 .HasColumnType("VARCHAR")
                 .HasMaxLength(100);
 
-            builder.HasIndex(x => x.Slug, "IX_Adresses_Slug")
+            builder.HasIndex(x => x.Slug, "IX_Addresses_Slug")
                 .IsUnique();
 
             builder.HasOne(x => x.User)
-                .WithOne(x => x.Adress)
-                .HasForeignKey<Adress>(x => x.UserId);
+                .WithOne(x => x.Address)
+                .HasForeignKey<Address>(x => x.UserId);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Livraria.Data;
 using Livraria.Extensions;
+using Livraria.Models.Books;
 using Livraria.Models.Users;
 using Livraria.ViewModels;
 using Livraria.ViewModels.Users;
@@ -15,7 +16,7 @@ namespace Livraria.Controllers.UserControllers
     public class UserController : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> GetAllAsync([FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -29,7 +30,7 @@ namespace Livraria.Controllers.UserControllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> GetByIdAsync([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -46,47 +47,44 @@ namespace Livraria.Controllers.UserControllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] UserViewModel model, [FromServices] LivrariaDataContext context)
+        [HttpGet("address")]
+        public async Task<IActionResult> GetAddressAsync([FromServices] LivrariaDataContext context)
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(new ResultViewModel<User>(ModelState.GetErrors()));
+                var adress = await context.Addresses.FirstOrDefaultAsync(x => x.User.Email == User.Identity.Name);
 
-                var role = await context.Roles.FirstOrDefaultAsync(x => x.Slug == "user");
+                if (adress is null)
+                    return BadRequest(new ResultViewModel<User>("40exU - Endereço não encontrado"));
 
-                if (role is null)
-                    throw new DbUpdateException();
-
-                var user = new User
-                {
-                    Name = model.Name,
-                    Email = model.Email,
-                    Phone = model.Phone,
-                    PasswordHash = model.PasswordHash,
-                    Slug = Guid.NewGuid().ToString(),
-                };
-
-                user.Roles.Add(role);
-
-                await context.Users.AddAsync(user);
-                await context.SaveChangesAsync();
-
-                return Created($"v1/users/{user.Id}", new ResultViewModel<User>(user));
-            }
-            catch (DbUpdateException)
-            {
-                return StatusCode(500, new ResultViewModel<User>("50exU - Erro ao inserir usuario"));
+                return Ok(new ResultViewModel<Address>(adress));
             }
             catch
             {
-                return StatusCode(500, new ResultViewModel<User>("50exU - Erro ao acessar o servidor"));
+                return StatusCode(500, new ResultViewModel<Address>("50exU - Erro ao acessar o servidor"));
+            }
+        }
+
+        [HttpGet("evaluation")]
+        public async Task<IActionResult> GetEvaluationsAsync([FromServices] LivrariaDataContext context)
+        {
+            try
+            {
+                var evaluations = await context.Evaluations.Where(x => x.User.Email == User.Identity.Name).ToListAsync();
+
+                if (evaluations is null)
+                    return BadRequest(new ResultViewModel<User>("40exU - Avaliações não encontradas"));
+
+                return Ok(new ResultViewModel<List<Evaluation>>(evaluations));
+            }
+            catch
+            {
+                return StatusCode(500, new ResultViewModel<Evaluation>("50exU - Erro ao acessar o servidor"));
             }
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] UserViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> PutAsync([FromRoute] int id, [FromBody] UserViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -119,7 +117,7 @@ namespace Livraria.Controllers.UserControllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete([FromRoute] int id, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> DeleteAsync([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
             {

@@ -15,7 +15,7 @@ namespace Livraria.Controllers.BookControllers
     public class AuthorController : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> GetAllAsync([FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace Livraria.Controllers.BookControllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> GetByIdAsync([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace Livraria.Controllers.BookControllers
 
         [HttpPost]
         [Authorize(Roles = "administrator")]
-        public async Task<IActionResult> Post([FromBody] AuthorViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> PostAsync([FromBody] AuthorViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace Livraria.Controllers.BookControllers
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = "administrator")]
-        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] AuthorViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> PutAsync([FromRoute] int id, [FromBody] AuthorViewModel model, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -116,7 +116,7 @@ namespace Livraria.Controllers.BookControllers
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "administrator")]
-        public async Task<IActionResult> Delete([FromRoute] int id, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> DeleteAsync([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {
             try
             {
@@ -143,7 +143,7 @@ namespace Livraria.Controllers.BookControllers
 
         [HttpPost("upload-image/{id:int}")]
         [Authorize(Roles = "administrator")]
-        public async Task<IActionResult> UploadImage([FromRoute] int id, [FromBody] UploadImageViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> UploadImageAsync([FromRoute] int id, [FromBody] UploadImageViewModel model, [FromServices] LivrariaDataContext context)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
@@ -177,7 +177,7 @@ namespace Livraria.Controllers.BookControllers
                 context.Authors.Update(author);
                 await context.SaveChangesAsync();
 
-                return Ok(new ResultViewModel<string>("Imagem inserida com sucesso!", null));
+                return Ok(new ResultViewModel<string>("Imagem inserida com sucesso!", new()));
             }
             catch (DbUpdateException)
             {

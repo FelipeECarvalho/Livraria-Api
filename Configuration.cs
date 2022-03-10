@@ -7,7 +7,7 @@
         public static string JwtKey;
         public static SmtpConfiguration Smtp { get; set; } = new();
 
-        public class SmtpConfiguration 
+        public class SmtpConfiguration
         {
             public string Host { get; set; }
             public int Port { get; set; } = 25;

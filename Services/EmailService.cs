@@ -1,4 +1,4 @@
-﻿ using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
 
 namespace Livraria.Services
@@ -12,7 +12,7 @@ namespace Livraria.Services
             string body,
             string fromName,
             string fromEmail
-            ) 
+            )
         {
             var smtpClient = new SmtpClient(Configuration.Smtp.Host, Configuration.Smtp.Port);
 
@@ -28,14 +28,14 @@ namespace Livraria.Services
             mail.Body = body;
             mail.IsBodyHtml = true;
 
-            try 
+            try
             {
                 smtpClient.Send(mail);
                 return true;
             }
-            catch(Exception)
+            catch (Exception)
             {
-                return false;            
+                return false;
             }
         }
     }

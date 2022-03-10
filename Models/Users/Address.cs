@@ -1,6 +1,6 @@
 ﻿namespace Livraria.Models.Users
 {
-    public class Adress
+    public class Address
     {
         public int Id { get; set; }
         public int UserId { get; set; }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Livraria.ViewModels
+namespace Livraria.ViewModels.Sales
 {
     public class CreateSaleViewModel
     {

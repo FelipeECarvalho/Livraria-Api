@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using SecureIdentity.Password;
 using System.Text.RegularExpressions;
 
-namespace Livraria.Controllers
+namespace Livraria.Controllers.UserControllers
 {
     [ApiController]
     [Authorize]
@@ -19,7 +19,7 @@ namespace Livraria.Controllers
     {
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Post([FromBody] RegisterViewModel model,[FromServices]EmailService emailService, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> PostAsync([FromBody] RegisterViewModel model, [FromServices] EmailService emailService, [FromServices] LivrariaDataContext context)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ResultViewModel<dynamic>(ModelState.GetErrors()));
@@ -45,7 +45,7 @@ namespace Livraria.Controllers
                 await context.Users.AddAsync(user);
                 await context.SaveChangesAsync();
 
-                return Ok(new ResultViewModel<dynamic>(new {user.Email, password}));
+                return Ok(new ResultViewModel<dynamic>(new { user.Email, password }));
 
             }
             catch (DbUpdateException)
@@ -60,7 +60,7 @@ namespace Livraria.Controllers
 
         [HttpGet("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginViewModel model, [FromServices] LivrariaDataContext context)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ResultViewModel<User>(ModelState.GetErrors()));
@@ -90,7 +90,7 @@ namespace Livraria.Controllers
 
         [Authorize]
         [HttpPost("upload-image")]
-        public async Task<IActionResult> UploadImage([FromBody] UploadImageViewModel model, [FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> UploadImageAsync([FromBody] UploadImageViewModel model, [FromServices] LivrariaDataContext context)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
