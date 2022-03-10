@@ -6,6 +6,7 @@ using Livraria.ViewModels.Books;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Livraria.Controllers.BookControllers
 {
@@ -14,11 +15,15 @@ namespace Livraria.Controllers.BookControllers
     public class CategoryController : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> Get([FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> Get([FromServices] LivrariaDataContext context, [FromServices] IMemoryCache cache)
         {
             try
             {
-                var categories = await context.Categories.ToListAsync();
+                var categories = await cache.GetOrCreateAsync("CategoryCache", entry =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
+                    return GetCategories(context);
+                });
                 return Ok(new ResultViewModel<List<Category>>(categories));
             }
             catch
@@ -27,6 +32,9 @@ namespace Livraria.Controllers.BookControllers
             }
         }
 
+        private async Task<List<Category>> GetCategories(LivrariaDataContext context) 
+            => await context.Categories.ToListAsync();
+            
         [HttpGet("{id:int}")]
         public async Task<IActionResult> Get([FromRoute] int id, [FromServices] LivrariaDataContext context)
         {

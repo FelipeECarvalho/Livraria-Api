@@ -1,4 +1,4 @@
-﻿using System.Net;
+﻿ using System.Net;
 using System.Net.Mail;
 
 namespace Livraria.Services
@@ -10,8 +10,8 @@ namespace Livraria.Services
             string toEmail,
             string subject,
             string body,
-            string fromName = "Emanuel's Softwares",
-            string fromEmail = ""
+            string fromName,
+            string fromEmail
             ) 
         {
             var smtpClient = new SmtpClient(Configuration.Smtp.Host, Configuration.Smtp.Port);

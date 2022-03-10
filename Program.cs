@@ -1,18 +1,19 @@
 using Livraria;
 using Livraria.Data;
-using sib_api_v3_sdk.Api;
 using Livraria.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.IdentityModel.Tokens;
+using System.IO.Compression;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+LoadConfiguration(builder);
+
 ConfigureAuthentication(builder);
 
 ConfigureMvc(builder);
-
-LoadConfiguration(builder);
 
 LoadServices(builder);
 
@@ -21,6 +22,8 @@ var app = builder.Build();
 app.MapControllers();
 
 app.UseAuthentication();
+
+app.UseResponseCompression();
 
 app.UseAuthorization();
 
@@ -70,6 +73,12 @@ void LoadConfiguration(WebApplicationBuilder builder)
 {
     Configuration.ConnectionString = builder.Configuration.GetValue<string>("ConnectionString");
     Configuration.JwtKey = builder.Configuration.GetValue<string>("JwtKey");
+
+    var smtp = new Configuration.SmtpConfiguration();
+
+    builder.Configuration.GetSection("Smtp").Bind(smtp);
+
+    Configuration.Smtp = smtp;
 }
 
 void LoadServices(WebApplicationBuilder builder)
@@ -77,5 +86,15 @@ void LoadServices(WebApplicationBuilder builder)
     builder.Services.AddDbContext<LivrariaDataContext>();
     builder.Services.AddTransient<TokenService>();
     builder.Services.AddTransient<EmailService>();
+    builder.Services.AddMemoryCache();
 
+    builder.Services.AddResponseCompression(x =>
+    {
+        x.Providers.Add<GzipCompressionProvider>();
+    });
+
+    builder.Services.Configure<GzipCompressionProviderOptions>(options => 
+    {
+        options.Level = CompressionLevel.Optimal;
+    });
 }

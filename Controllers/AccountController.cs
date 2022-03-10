@@ -80,7 +80,7 @@ namespace Livraria.Controllers
 
                 var token = new TokenService().GenerateToken(user);
 
-                return Ok(token);
+                return Ok(new ResultViewModel<string>(token, null));
             }
             catch
             {
