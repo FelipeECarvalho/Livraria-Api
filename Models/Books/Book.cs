@@ -11,7 +11,7 @@
         public string Summary { get; set; }
         public int PagesNumber { get; set; }
         public string Slug { get; set; }
-        public IList<Evaluation> Evaluations { get; set; }
+        public IList<Review> Reviews { get; set; }
         public IList<Sale> Sales { get; set; }
         public int AuthorId { get; set; }
         public Author Author { get; set; }

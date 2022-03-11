@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Livraria.Data.Mappings.BooksMap
 {
-    public class EvaluationMap : IEntityTypeConfiguration<Evaluation>
+    public class ReviewMap : IEntityTypeConfiguration<Review>
     {
-        public void Configure(EntityTypeBuilder<Evaluation> builder)
+        public void Configure(EntityTypeBuilder<Review> builder)
         {
-            builder.ToTable("Evaluations");
+            builder.ToTable("Reviews");
 
             builder.HasKey(x => x.Id);
 
@@ -27,9 +27,9 @@ namespace Livraria.Data.Mappings.BooksMap
                 .HasColumnName("Body")
                 .HasColumnType("TEXT");
 
-            builder.Property(x => x.Rating)
+            builder.Property(x => x.Stars)
                 .IsRequired()
-                .HasColumnName("Rating")
+                .HasColumnName("Stars")
                 .HasColumnType("INT")
                 .HasMaxLength(5);
 
@@ -39,14 +39,14 @@ namespace Livraria.Data.Mappings.BooksMap
                 .HasColumnType("VARCHAR")
                 .HasMaxLength(80);
 
-            builder.HasIndex(x => x.Slug, "IX_Evaluations_Slug")
+            builder.HasIndex(x => x.Slug, "IX_Reviews_Slug")
                 .IsUnique();
 
             builder.HasOne(x => x.User)
-                .WithMany(x => x.Evaluations);
+                .WithMany(x => x.Reviews);
 
             builder.HasOne(x => x.Book)
-                .WithMany(x => x.Evaluations);
+                .WithMany(x => x.Reviews);
         }
     }
 }

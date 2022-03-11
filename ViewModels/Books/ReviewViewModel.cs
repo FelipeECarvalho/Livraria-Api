@@ -2,7 +2,7 @@
 
 namespace Livraria.ViewModels.Books
 {
-    public class EvaluationViewModel
+    public class ReviewViewModel
     {
         [Required(ErrorMessage = "O campo titulo é obrigatório")]
         [StringLength(80, MinimumLength = 3, ErrorMessage = "O campo titulo precisa ser entre 3 e 80 caracteres")]
@@ -12,7 +12,7 @@ namespace Livraria.ViewModels.Books
         public string Body { get; set; }
         [Required(ErrorMessage = "O campo titulo é obrigatório")]
         [Range(0, 5, ErrorMessage = "O campo avaliação precisa ser entre 0 e 5")]
-        public int Rating { get; set; }
+        public int Stars { get; set; }
         [Required(ErrorMessage = "O campo id usuário é obrigatório")]
         public int UserId { get; set; }
         [Required(ErrorMessage = "O campo id livro é obrigatório")]

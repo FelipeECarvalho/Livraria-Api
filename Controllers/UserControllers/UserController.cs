@@ -66,20 +66,20 @@ namespace Livraria.Controllers.UserControllers
         }
 
         [HttpGet("evaluation")]
-        public async Task<IActionResult> GetEvaluationsAsync([FromServices] LivrariaDataContext context)
+        public async Task<IActionResult> GetReviewsAsync([FromServices] LivrariaDataContext context)
         {
             try
             {
-                var evaluations = await context.Evaluations.Where(x => x.User.Email == User.Identity.Name).ToListAsync();
+                var reviews = await context.Reviews.Where(x => x.User.Email == User.Identity.Name).ToListAsync();
 
-                if (evaluations is null)
+                if (reviews is null)
                     return BadRequest(new ResultViewModel<User>("40exU - Avaliações não encontradas"));
 
-                return Ok(new ResultViewModel<List<Evaluation>>(evaluations));
+                return Ok(new ResultViewModel<List<Review>>(reviews));
             }
             catch
             {
-                return StatusCode(500, new ResultViewModel<Evaluation>("50exU - Erro ao acessar o servidor"));
+                return StatusCode(500, new ResultViewModel<Review>("50exU - Erro ao acessar o servidor"));
             }
         }
 
