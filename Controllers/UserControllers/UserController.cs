@@ -65,7 +65,7 @@ namespace Livraria.Controllers.UserControllers
             }
         }
 
-        [HttpGet("evaluation")]
+        [HttpGet("reviews")]
         public async Task<IActionResult> GetReviewsAsync([FromServices] LivrariaDataContext context)
         {
             try
